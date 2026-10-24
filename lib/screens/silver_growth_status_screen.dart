@@ -6,8 +6,8 @@ class SilverGrowthStatusScreen extends StatefulWidget {
 
   const SilverGrowthStatusScreen({
     super.key,
-    required this.tenureMonths,
-    required this.benefitType,
+    this.tenureMonths = 18,
+    this.benefitType = 'Monthly Payout',
   });
 
   @override
@@ -16,7 +16,7 @@ class SilverGrowthStatusScreen extends StatefulWidget {
 }
 
 class _SilverGrowthStatusScreenState extends State<SilverGrowthStatusScreen> {
-  int _bottomNavIndex = 1; // 'My Plans' active
+  int _bottomNavIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -44,59 +44,13 @@ class _SilverGrowthStatusScreenState extends State<SilverGrowthStatusScreen> {
             Expanded(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    // 1. Header Banner
-                    _buildHeaderBanner(),
-
-                    Padding(
-                      padding: const EdgeInsets.all(14),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // 2. Mobile Verification & Status Banner Card
-                          _buildStatusBannerCard(),
-
-                          const SizedBox(height: 14),
-
-                          // 3. Application Details Card
-                          _buildApplicationDetailsCard(),
-
-                          const SizedBox(height: 16),
-
-                          // 4. Your Submitted Plan Summary
-                          _buildSubmittedPlanSummaryCard(),
-
-                          const SizedBox(height: 16),
-
-                          // 5. Track Your Application Timeline
-                          _buildApplicationTimelineCard(),
-
-                          const SizedBox(height: 16),
-
-                          // 6. Your Documents Card
-                          _buildYourDocumentsCard(),
-
-                          const SizedBox(height: 14),
-
-                          // 7. If Changes Required Alert
-                          _buildIfChangesRequiredAlert(),
-
-                          const SizedBox(height: 18),
-
-                          // 8. Action Buttons
-                          _buildActionButtons(),
-
-                          const SizedBox(height: 20),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                child: _bottomNavIndex == 1
+                    ? _buildMyPlansView()
+                    : _buildExploreProgrammeView(),
               ),
             ),
 
-            // Bottom Navigation
+            // Bottom Navigation Bar
             _buildBottomNavigationBar(),
           ],
         ),
@@ -104,7 +58,493 @@ class _SilverGrowthStatusScreenState extends State<SilverGrowthStatusScreen> {
     );
   }
 
-  // --- 1. Header Banner ---
+  // ==========================================
+  // VIEW 1: MY PLANS (YOUR SILVER GROWTH PORTFOLIO)
+  // ==========================================
+  Widget _buildMyPlansView() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Dark Header Banner
+        Container(
+          width: double.infinity,
+          color: const Color(0xFF1B0D05),
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text(
+                'My Plans',
+                style: TextStyle(
+                  color: Color(0xFFFAF7F3),
+                  fontSize: 28,
+                  fontWeight: FontWeight.w900,
+                  fontFamily: 'serif',
+                ),
+              ),
+              SizedBox(height: 2),
+              Text(
+                'Your Silver Growth portfolio',
+                style: TextStyle(
+                  color: Color(0xFFD4C2A8),
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Title & Subtitle Row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'Your plans',
+                        style: TextStyle(
+                          color: Color(0xFF1E1007),
+                          fontSize: 24,
+                          fontWeight: FontWeight.w900,
+                          fontFamily: 'serif',
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        '3 active • 1 pending',
+                        style: TextStyle(
+                          color: Color(0xFF786253),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Text(
+                    'As of 21 Dec 2026',
+                    style: TextStyle(
+                      color: Color(0xFF8C7A6B),
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              // CARD 1: Pending Approval (SG0024)
+              _buildPlanCard(
+                isPending: true,
+                statusLabel: 'Pending Approval',
+                idLabel: 'Application ID SG0024',
+                weightGrams: '750.000 g',
+                tenure: '18 months',
+                benefitOption: 'Monthly Payout',
+                startDateLabel: 'Submitted on
+21 Dec 2026',
+                middleLabel: 'Start Date
+—
+Awaiting activation',
+                endDateLabel: 'End Date
+—
+Set on activation',
+                footerText: 'Awaiting company approval',
+                actionText: 'View application details >',
+              ),
+
+              const SizedBox(height: 14),
+
+              // CARD 2: Active (SG0021)
+              _buildPlanCard(
+                isPending: false,
+                statusLabel: 'Active',
+                idLabel: 'Plan ID SG0021',
+                weightGrams: '1,000.000 g',
+                tenure: '18 months',
+                benefitOption: 'Monthly Payout',
+                startDateLabel: 'Start Date
+21 Oct 2026',
+                middleLabel: '',
+                endDateLabel: 'End Date
+21 Apr 2028',
+                earnedSilverGrams: '20.000 g',
+                actionText: 'View plan details >',
+              ),
+
+              const SizedBox(height: 14),
+
+              // CARD 3: Active (SG0022)
+              _buildPlanCard(
+                isPending: false,
+                statusLabel: 'Active',
+                idLabel: 'Plan ID SG0022',
+                weightGrams: '500.000 g',
+                tenure: '36 months',
+                benefitOption: 'Accumulate at Maturity',
+                startDateLabel: 'Start Date
+21 Oct 2026',
+                middleLabel: '',
+                endDateLabel: 'End Date
+21 Oct 2029',
+                earnedSilverGrams: '10.000 g',
+                actionText: 'View plan details >',
+              ),
+
+              const SizedBox(height: 14),
+
+              // CARD 4: Active (SG0023)
+              _buildPlanCard(
+                isPending: false,
+                statusLabel: 'Active',
+                idLabel: 'Plan ID SG0023',
+                weightGrams: '500.000 g',
+                tenure: '18 months',
+                benefitOption: 'Monthly Payout',
+                startDateLabel: 'Start Date
+21 Nov 2026',
+                middleLabel: '',
+                endDateLabel: 'End Date
+21 May 2028',
+                earnedSilverGrams: '5.000 g',
+                actionText: 'View plan details >',
+              ),
+
+              const SizedBox(height: 16),
+
+              // Footnote
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Row(
+                    children: [
+                      Icon(Icons.info_outline_rounded, color: Color(0xFF8C7A6B), size: 14),
+                      SizedBox(width: 6),
+                      Text(
+                        'Earned Silver includes paid and unpaid benefits.',
+                        style: TextStyle(color: Color(0xFF8C7A6B), fontSize: 10.5),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    'Illustrative data',
+                    style: TextStyle(color: Color(0xFF8C7A6B), fontSize: 10.5),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPlanCard({
+    required bool isPending,
+    required String statusLabel,
+    required String idLabel,
+    required String weightGrams,
+    required String tenure,
+    required String benefitOption,
+    required String startDateLabel,
+    required String middleLabel,
+    required String endDateLabel,
+    String? earnedSilverGrams,
+    String? footerText,
+    required String actionText,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(18),
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xFF381F10),
+            Color(0xFF221006),
+            Color(0xFF140803),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x33000000),
+            blurRadius: 12,
+            offset: Offset(0, 6),
+          ),
+        ],
+        border: Border.all(color: const Color(0xFF634123), width: 1),
+      ),
+      padding: const EdgeInsets.all(14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: isPending ? const Color(0x33D97706) : const Color(0x3316A34A),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: isPending ? const Color(0xFFF59E0B) : const Color(0xFF22C55E),
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          isPending ? Icons.access_time_rounded : Icons.circle,
+                          color: isPending ? const Color(0xFFFBBF24) : const Color(0xFF4ADE80),
+                          size: isPending ? 13 : 8,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          statusLabel,
+                          style: TextStyle(
+                            color: isPending ? const Color(0xFFFBBF24) : const Color(0xFF4ADE80),
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    idLabel,
+                    style: const TextStyle(
+                      color: Color(0xFFD4C2A8),
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              const Icon(Icons.view_in_ar_rounded, color: Color(0xFFE5B864), size: 28),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      isPending ? 'Submitted Silver' : 'Principal Silver',
+                      style: const TextStyle(
+                        color: Color(0xFFA38F7D),
+                        fontSize: 11,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      weightGrams,
+                      style: const TextStyle(
+                        color: Color(0xFFFAF7F3),
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: 'serif',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Container(
+                width: 1,
+                height: 40,
+                color: const Color(0xFF4A2F1A),
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+              ),
+
+              Expanded(
+                flex: 5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.access_time, color: Color(0xFFE5B864), size: 14),
+                        const SizedBox(width: 6),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Tenure', style: TextStyle(color: Color(0xFFA38F7D), fontSize: 9.5)),
+                            Text(tenure, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        const Icon(Icons.savings_outlined, color: Color(0xFFE5B864), size: 14),
+                        const SizedBox(width: 6),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Benefit option', style: TextStyle(color: Color(0xFFA38F7D), fontSize: 9.5)),
+                            Text(benefitOption, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Divider(color: Color(0xFF4A2F1A), height: 1),
+          ),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.calendar_month_outlined, color: Color(0xFFE5B864), size: 18),
+                  const SizedBox(width: 6),
+                  Text(
+                    startDateLabel,
+                    style: const TextStyle(color: Color(0xFFD4C2A8), fontSize: 10, height: 1.2),
+                  ),
+                ],
+              ),
+
+              if (middleLabel.isNotEmpty)
+                Text(
+                  middleLabel,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Color(0xFFA38F7D), fontSize: 9.5, height: 1.2),
+                ),
+
+              Row(
+                children: [
+                  const Icon(Icons.event_available_outlined, color: Color(0xFFE5B864), size: 18),
+                  const SizedBox(width: 6),
+                  Text(
+                    endDateLabel,
+                    style: const TextStyle(color: Color(0xFFD4C2A8), fontSize: 10, height: 1.2),
+                  ),
+                ],
+              ),
+
+              if (earnedSilverGrams != null)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0x33E5B864),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color(0xFFE5B864), width: 0.8),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.eco_rounded, color: Color(0xFFE5B864), size: 14),
+                      const SizedBox(width: 4),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Earned Silver', style: TextStyle(color: Color(0xFFD4C2A8), fontSize: 8)),
+                          Text(
+                            earnedSilverGrams,
+                            style: const TextStyle(
+                              color: Color(0xFFE5B864),
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+
+          if (footerText != null) ...[
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Icon(Icons.access_time_rounded, color: Color(0xFFFBBF24), size: 13),
+                const SizedBox(width: 6),
+                Text(
+                  footerText,
+                  style: const TextStyle(color: Color(0xFFFBBF24), fontSize: 10.5),
+                ),
+              ],
+            ),
+          ],
+
+          const SizedBox(height: 10),
+
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              actionText,
+              style: const TextStyle(
+                color: Color(0xFFE5B864),
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ==========================================
+  // VIEW 2: EXPLORE PROGRAMME
+  // ==========================================
+  Widget _buildExploreProgrammeView() {
+    return Column(
+      children: [
+        _buildHeaderBanner(),
+        Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildStatusBannerCard(),
+              const SizedBox(height: 14),
+              _buildApplicationDetailsCard(),
+              const SizedBox(height: 16),
+              _buildSubmittedPlanSummaryCard(),
+              const SizedBox(height: 16),
+              _buildApplicationTimelineCard(),
+              const SizedBox(height: 16),
+              _buildYourDocumentsCard(),
+              const SizedBox(height: 14),
+              _buildIfChangesRequiredAlert(),
+              const SizedBox(height: 18),
+              _buildActionButtons(),
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildHeaderBanner() {
     return Container(
       width: double.infinity,
@@ -114,7 +554,7 @@ class _SilverGrowthStatusScreenState extends State<SilverGrowthStatusScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: const [
           Text(
-            'SILVERGROWTH • AGREEMENTSTATUS',
+            'SILVER GROWTH • AGREEMENT STATUS',
             style: TextStyle(
               color: Color(0xFFE5B864),
               fontSize: 10,
@@ -145,7 +585,6 @@ class _SilverGrowthStatusScreenState extends State<SilverGrowthStatusScreen> {
     );
   }
 
-  // --- 2. Status Banner Card ---
   Widget _buildStatusBannerCard() {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -156,7 +595,6 @@ class _SilverGrowthStatusScreenState extends State<SilverGrowthStatusScreen> {
       ),
       child: Row(
         children: [
-          // Left Verified Check
           Container(
             padding: const EdgeInsets.all(8),
             decoration: const BoxDecoration(
@@ -166,8 +604,6 @@ class _SilverGrowthStatusScreenState extends State<SilverGrowthStatusScreen> {
             child: const Icon(Icons.check, color: Colors.white, size: 20),
           ),
           const SizedBox(width: 10),
-
-          // Message
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,48 +628,11 @@ class _SilverGrowthStatusScreenState extends State<SilverGrowthStatusScreen> {
               ],
             ),
           ),
-
-          const SizedBox(width: 8),
-
-          // Right Awaiting Approval Pill
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFF3DB),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFFFBD38D), width: 1),
-                ),
-                child: const Text(
-                  'AWAITING COMPANY\nAPPROVAL',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color(0xFFC8801C),
-                    fontSize: 8.5,
-                    fontWeight: FontWeight.bold,
-                    height: 1.1,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 2),
-              const Text(
-                'Your programme is not active yet.',
-                style: TextStyle(
-                  color: Color(0xFF786253),
-                  fontSize: 9,
-                ),
-              ),
-            ],
-          ),
         ],
       ),
     );
   }
 
-  // --- 3. Application Details Card ---
   Widget _buildApplicationDetailsCard() {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -242,122 +641,31 @@ class _SilverGrowthStatusScreenState extends State<SilverGrowthStatusScreen> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFFF3E4CD), width: 1),
       ),
-      child: Row(
+      child: Column(
         children: [
-          // User
           Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFFFF3DB),
-                ),
-                child: const Icon(Icons.person_outline,
-                    color: Color(0xFFC8801C), size: 20),
-              ),
-              const SizedBox(width: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'Chandan Soni',
-                    style: TextStyle(
-                      color: Color(0xFF1E1007),
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    'Customer ID: CUST0021',
-                    style: TextStyle(
-                      color: Color(0xFF1A73E8),
-                      fontSize: 10,
-                    ),
-                  ),
-                ],
-              ),
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text('Application ID', style: TextStyle(color: Color(0xFF786253), fontSize: 12)),
+              Text('SG0024', style: TextStyle(color: Color(0xFF1E1007), fontSize: 12, fontWeight: FontWeight.bold)),
             ],
           ),
-
-          const SizedBox(width: 10),
-          Container(
-            width: 1,
-            height: 40,
-            color: const Color(0xFFEFE0C9),
-          ),
-          const SizedBox(width: 10),
-
-          // Details List
-          Expanded(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Application:',
-                        style: TextStyle(color: Color(0xFF786253), fontSize: 10)),
-                    Row(
-                      children: [
-                        const Text('APP0021  ',
-                            style: TextStyle(
-                                color: Color(0xFF1E1007),
-                                fontSize: 10.5,
-                                fontWeight: FontWeight.bold)),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 4, vertical: 1),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFFF3DB),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: const Text(
-                            'SAMPLE DATA',
-                            style: TextStyle(
-                              color: Color(0xFF8C5B21),
-                              fontSize: 7.5,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 2),
-                _buildAppDetailLine(
-                    'Agreement:', 'SG0021 • Revision 01'),
-                _buildAppDetailLine(
-                    'Acceptance:', 'SR0021 • Revision 01'),
-                _buildAppDetailLine(
-                    'Submitted:', '21 Oct 2026 6:45 PM'),
-              ],
-            ),
+          const SizedBox(height: 6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text('Submitted On', style: TextStyle(color: Color(0xFF786253), fontSize: 12)),
+              Text('21 Dec 2026, 04:30 PM', style: TextStyle(color: Color(0xFF1E1007), fontSize: 12, fontWeight: FontWeight.bold)),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildAppDetailLine(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label,
-            style: const TextStyle(color: Color(0xFF786253), fontSize: 10)),
-        Text(value,
-            style: const TextStyle(
-                color: Color(0xFF1E1007),
-                fontSize: 10.5,
-                fontWeight: FontWeight.bold)),
-      ],
-    );
-  }
-
-  // --- 4. Your Submitted Plan Summary ---
   Widget _buildSubmittedPlanSummaryCard() {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: const Color(0xFFFFFBF2),
         borderRadius: BorderRadius.circular(14),
@@ -365,98 +673,23 @@ class _SilverGrowthStatusScreenState extends State<SilverGrowthStatusScreen> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: const [
-              Icon(Icons.inventory_2_outlined,
-                  color: Color(0xFFC8801C), size: 18),
-              SizedBox(width: 6),
-              Text(
-                'Your Submited Plan',
-                style: TextStyle(
-                  color: Color(0xFF2B1407),
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'serif',
-                ),
-              ),
-              SizedBox(width: 8),
-              Expanded(
-                child: Divider(color: Color(0xFFE5B864), thickness: 1.5),
-              ),
-            ],
+        children: const [
+          Text(
+            'Plan Summary',
+            style: TextStyle(color: Color(0xFF1E1007), fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'serif'),
           ),
-
-          const SizedBox(height: 10),
-
-          _buildPlanSummaryLine('Principal', '1,000.000 g', isBold: true),
-          _buildPlanSummaryLine('Sample basis', '999-equivalent grams'),
-          _buildPlanSummaryLine('Purity', '999'),
-          _buildPlanSummaryLine('Tenure', '${widget.tenureMonths} months'),
-          _buildPlanSummaryLine('Benefit', widget.benefitType),
-          _buildPlanSummaryLine('Scheduled monthly benefit', '10.000 g',
-              isBold: true),
-
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFF3DB),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: const [
-                Icon(Icons.info_outline_rounded,
-                    color: Color(0xFFC8801C), size: 15),
-                SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    'Benefit servicing follows the approved agreement schedule; this is not a payable balance.',
-                    style: TextStyle(
-                      color: Color(0xFF786253),
-                      fontSize: 10,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          SizedBox(height: 8),
+          Text('Principal Silver: 750.000 g', style: TextStyle(color: Color(0xFF1E1007), fontSize: 13)),
+          Text('Tenure: 18 months', style: TextStyle(color: Color(0xFF786253), fontSize: 12)),
+          Text('Benefit Option: Monthly Payout', style: TextStyle(color: Color(0xFF786253), fontSize: 12)),
         ],
       ),
     );
   }
 
-  Widget _buildPlanSummaryLine(String label, String value,
-      {bool isBold = false}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              color: Color(0xFF786253),
-              fontSize: 11,
-            ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              color: const Color(0xFF1E1007),
-              fontSize: 11.5,
-              fontWeight: isBold ? FontWeight.bold : FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // --- 5. Track Your Application Timeline ---
   Widget _buildApplicationTimelineCard() {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: const Color(0xFFFFFBF2),
         borderRadius: BorderRadius.circular(14),
@@ -464,209 +697,20 @@ class _SilverGrowthStatusScreenState extends State<SilverGrowthStatusScreen> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: const [
-              Icon(Icons.assignment_turned_in_outlined,
-                  color: Color(0xFFC8801C), size: 18),
-              SizedBox(width: 6),
-              Text(
-                'Track Your Application',
-                style: TextStyle(
-                  color: Color(0xFF2B1407),
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'serif',
-                ),
-              ),
-              SizedBox(width: 8),
-              Expanded(
-                child: Divider(color: Color(0xFFE5B864), thickness: 1.5),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          // Timeline Step 1
-          _buildTimelineStep(
-            status: 'done',
-            title: 'Silver details confirmed',
-            subtitle: 'Your silver details have been confirmed.',
-            isLast: false,
-          ),
-
-          // Timeline Step 2
-          _buildTimelineStep(
-            status: 'done',
-            title: 'Plan & benefit selected',
-            subtitle: 'You have selected your plan and benefit options.',
-            isLast: false,
-          ),
-
-          // Timeline Step 3
-          _buildTimelineStep(
-            status: 'done',
-            title: 'Consent verified & submitted',
-            subtitle: 'Your consent has been verified and submitted.',
-            timeStr: '21 Oct 2026 6:45 PM',
-            isLast: false,
-          ),
-
-          // Timeline Step 4
-          _buildTimelineStep(
-            status: 'in_progress',
-            title: 'Company review',
-            subtitle:
-                'Company checks the acceptance record, selected plan and consent.',
-            isLast: false,
-          ),
-
-          // Timeline Step 5
-          _buildTimelineStep(
-            status: 'pending',
-            title: 'Programme activation',
-            subtitle:
-                'You will see activation and the approved schedule in My Plans.',
-            isLast: true,
-          ),
-
-          const SizedBox(height: 10),
-          Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(Icons.refresh_rounded, color: Color(0xFF1A73E8), size: 16),
-                SizedBox(width: 4),
-                Text(
-                  'Refresh status',
-                  style: TextStyle(
-                    color: Color(0xFF1A73E8),
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
+        children: const [
+          Text('Application Progress', style: TextStyle(color: Color(0xFF1E1007), fontSize: 15, fontWeight: FontWeight.bold)),
+          SizedBox(height: 8),
+          Text('1. Consent Submitted (Completed)', style: TextStyle(color: Color(0xFF1E8E3E), fontSize: 12)),
+          Text('2. Company Verification (In Progress)', style: TextStyle(color: Color(0xFFC8801C), fontSize: 12, fontWeight: FontWeight.bold)),
+          Text('3. Plan Activation (Awaiting)', style: TextStyle(color: Color(0xFF786253), fontSize: 12)),
         ],
       ),
     );
   }
 
-  Widget _buildTimelineStep({
-    required String status,
-    required String title,
-    required String subtitle,
-    String? timeStr,
-    required bool isLast,
-  }) {
-    Color iconColor;
-    Widget iconWidget;
-
-    if (status == 'done') {
-      iconColor = const Color(0xFF1E8E3E);
-      iconWidget = Container(
-        padding: const EdgeInsets.all(2),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: iconColor,
-        ),
-        child: const Icon(Icons.check, color: Colors.white, size: 12),
-      );
-    } else if (status == 'in_progress') {
-      iconColor = const Color(0xFFC8801C);
-      iconWidget = Container(
-        padding: const EdgeInsets.all(2),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: iconColor,
-        ),
-        child: const Icon(Icons.access_time_filled_rounded,
-            color: Colors.white, size: 12),
-      );
-    } else {
-      iconColor = const Color(0xFFCBD5E1);
-      iconWidget = Container(
-        width: 16,
-        height: 16,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: iconColor,
-        ),
-      );
-    }
-
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            children: [
-              iconWidget,
-              if (!isLast)
-                Expanded(
-                  child: Container(
-                    width: 2,
-                    color: status == 'done'
-                        ? const Color(0xFF1E8E3E)
-                        : const Color(0xFFE2E8F0),
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: TextStyle(
-                            color: const Color(0xFF1E1007),
-                            fontSize: 12,
-                            fontWeight: status == 'done' || status == 'in_progress'
-                                ? FontWeight.bold
-                                : FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          subtitle,
-                          style: const TextStyle(
-                            color: Color(0xFF786253),
-                            fontSize: 10,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (timeStr != null)
-                    Text(
-                      timeStr,
-                      style: const TextStyle(
-                        color: Color(0xFF786253),
-                        fontSize: 9.5,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // --- 6. Your Documents Card ---
   Widget _buildYourDocumentsCard() {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: const Color(0xFFFFFBF2),
         borderRadius: BorderRadius.circular(14),
@@ -674,111 +718,16 @@ class _SilverGrowthStatusScreenState extends State<SilverGrowthStatusScreen> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: const [
-              Icon(Icons.description_outlined,
-                  color: Color(0xFFC8801C), size: 18),
-              SizedBox(width: 6),
-              Text(
-                'Your Documents',
-                style: TextStyle(
-                  color: Color(0xFF2B1407),
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'serif',
-                ),
-              ),
-              SizedBox(width: 8),
-              Expanded(
-                child: Divider(color: Color(0xFFE5B864), thickness: 1.5),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 10),
-
-          // Document 1
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      'Submitted agreement',
-                      style: TextStyle(
-                        color: Color(0xFF1E1007),
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      'The agreement you submitted for company review.',
-                      style: TextStyle(
-                        color: Color(0xFF786253),
-                        fontSize: 10,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Text(
-                'View  |  Download',
-                style: TextStyle(
-                  color: Color(0xFF1A73E8),
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 8),
-          const Divider(color: Color(0xFFEFE0C9), height: 1),
-          const SizedBox(height: 8),
-
-          // Document 2
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      'Silver acceptance receipt',
-                      style: TextStyle(
-                        color: Color(0xFF1E1007),
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      'Your acceptance receipt for this application.',
-                      style: TextStyle(
-                        color: Color(0xFF786253),
-                        fontSize: 10,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Text(
-                'View',
-                style: TextStyle(
-                  color: Color(0xFF1A73E8),
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
+        children: const [
+          Text('Submitted Documents', style: TextStyle(color: Color(0xFF1E1007), fontSize: 14, fontWeight: FontWeight.bold)),
+          SizedBox(height: 6),
+          Text('• Signed Programme Agreement PDF', style: TextStyle(color: Color(0xFF1A73E8), fontSize: 12)),
+          Text('• Silver Acceptance Receipt', style: TextStyle(color: Color(0xFF1A73E8), fontSize: 12)),
         ],
       ),
     );
   }
 
-  // --- 7. If Changes Required Alert ---
   Widget _buildIfChangesRequiredAlert() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -787,89 +736,36 @@ class _SilverGrowthStatusScreenState extends State<SilverGrowthStatusScreen> {
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: const Color(0xFFFBD38D), width: 1),
       ),
-      child: Row(
-        children: const [
-          Icon(Icons.info_outline_rounded,
-              color: Color(0xFFC8801C), size: 18),
-          SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              'If changes are required: Material changes will be shown for your fresh review and consent.',
-              style: TextStyle(
-                color: Color(0xFF786253),
-                fontSize: 10.5,
-              ),
-            ),
-          ),
-        ],
+      child: const Text(
+        'Note: Any material updates to this plan will be notified for your re-confirmation.',
+        style: TextStyle(color: Color(0xFF786253), fontSize: 11),
       ),
     );
   }
 
-  // --- 8. Action Buttons ---
   Widget _buildActionButtons() {
     return Column(
       children: [
-        Container(
+        SizedBox(
           width: double.infinity,
           height: 48,
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF3B1E0F), Color(0xFF220D04)],
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF3B1E0F),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.15),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                'View Application in My Plans',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(width: 8),
-              Icon(Icons.arrow_forward_rounded,
-                  color: Color(0xFFE5B864), size: 18),
-            ],
-          ),
-        ),
-
-        const SizedBox(height: 10),
-
-        Container(
-          width: double.infinity,
-          height: 44,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(22),
-            border: Border.all(color: const Color(0xFFE5C07B), width: 1),
-          ),
-          child: const Center(
-            child: Text(
-              'Contact Support',
-              style: TextStyle(
-                color: Color(0xFF8C5B21),
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            onPressed: () {
+              setState(() {
+                _bottomNavIndex = 1;
+              });
+            },
+            child: const Text('View All My Plans', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ),
       ],
     );
   }
 
-  // --- Bottom Navigation Bar ---
   Widget _buildBottomNavigationBar() {
     return Container(
       color: Colors.white,
