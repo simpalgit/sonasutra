@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/logo_widget.dart';
 import 'gold_sip_loading_screen.dart';
+import 'silver_growth/pdf_viewer_screen.dart';
 
 class GoldSipReportScreen extends StatefulWidget {
   const GoldSipReportScreen({super.key});
@@ -116,22 +117,11 @@ class _GoldSipReportScreenState extends State<GoldSipReportScreen> {
   ];
 
   void _showDownloadSuccess() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: const Color(0xFF2B1407),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        content: Row(
-          children: const [
-            Icon(Icons.check_circle_rounded, color: Color(0xFFE5B864)),
-            SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                'Gold SIP Account Statement PDF downloaded successfully!',
-                style: TextStyle(color: Colors.white, fontSize: 13),
-              ),
-            ),
-          ],
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const PdfViewerScreen(
+          title: 'Gold SIP Account Statement PDF',
+          documentNumber: 'SS100458 • 14 Oct 2026',
         ),
       ),
     );
@@ -262,12 +252,98 @@ class _GoldSipReportScreenState extends State<GoldSipReportScreen> {
 
                 const SizedBox(height: 18),
 
+                // Document Actions (Download to Gallery/Storage & Upload PDF)
+                _buildDocumentActionsCard(),
+
+                const SizedBox(height: 18),
+
                 // 6. Important Information & Footer Branding
                 _buildImportantInformationSection(),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildDocumentActionsCard() {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFFBF2),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFF3E4CD)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(Icons.picture_as_pdf_rounded, color: Color(0xFFC8801C), size: 22),
+              SizedBox(width: 8),
+              Text(
+                'Statement Document Options',
+                style: TextStyle(
+                  color: Color(0xFF1B0D05),
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'serif',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF1B0D05),
+                    foregroundColor: const Color(0xFFE5B864),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const PdfViewerScreen(
+                          title: 'Gold SIP Account Statement PDF',
+                          documentNumber: 'SS100458 • 14 Oct 2026',
+                        ),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.file_download_rounded, size: 18),
+                  label: const Text('Download PDF', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: const Color(0xFFC8801C),
+                    side: const BorderSide(color: Color(0xFFC8801C)),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const PdfViewerScreen(
+                          title: 'Gold SIP Account Statement PDF',
+                          documentNumber: 'SS100458 • 14 Oct 2026',
+                        ),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.file_upload_rounded, size: 18),
+                  label: const Text('Upload PDF', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -117,57 +117,122 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF140B06),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Color(0xFFE5B864)),
-          onPressed: () => Navigator.of(context).maybePop(),
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          child: Column(
-            children: [
-              const SonaSutraLogo(scale: 1.2),
-              const SizedBox(height: 24),
-
-              Text(
-                _currentStep == 1
-                    ? 'Forgot Password?'
-                    : _currentStep == 2
-                        ? 'Verify OTP Code'
-                        : 'Set New Password',
-                style: const TextStyle(
-                  color: Color(0xFFFAF7F2),
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
+      body: Stack(
+        children: [
+          // Background Gradient
+          Positioned.fill(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment(0.4, -0.6),
+                  radius: 1.2,
+                  colors: [
+                    Color(0xFF381F10),
+                    Color(0xFF221108),
+                    Color(0xFF120804),
+                    Color(0xFF0A0402),
+                  ],
                 ),
               ),
-              const SizedBox(height: 8),
-
-              Text(
-                _currentStep == 1
-                    ? 'Enter your registered Mobile Number or Email to receive a 6-digit reset code.'
-                    : _currentStep == 2
-                        ? 'Enter the 6-digit code sent to ${_identifierController.text.isEmpty ? "your mobile" : _identifierController.text}.'
-                        : 'Create a strong new password for your Sona Sutra account.',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Color(0xFFA0AEC0),
-                  fontSize: 12.5,
-                  height: 1.4,
-                ),
-              ),
-              const SizedBox(height: 32),
-
-              if (_currentStep == 1) _buildStep1Form(),
-              if (_currentStep == 2) _buildStep2Otp(),
-              if (_currentStep == 3) _buildStep3NewPassword(),
-            ],
+            ),
           ),
-        ),
+
+          // Bokeh Background
+          Positioned.fill(
+            child: CustomPaint(
+              painter: BokehBackgroundPainter(),
+            ),
+          ),
+
+          SafeArea(
+            child: Column(
+              children: [
+                // Header with Back Button and Logo
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Color(0xFFE5B864)),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                      const SonaSutraLogo(scale: 0.8),
+                      const SizedBox(width: 48), // Spacer for symmetry
+                    ],
+                  ),
+                ),
+
+                Text(
+                  _currentStep == 1
+                      ? 'Forgot Password?'
+                      : _currentStep == 2
+                          ? 'Verify OTP Code'
+                          : 'Set New Password',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Georgia',
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Text(
+                    _currentStep == 1
+                        ? 'Enter your registered Mobile Number or Email to receive a 6-digit reset code.'
+                        : _currentStep == 2
+                            ? 'Enter the 6-digit code sent to ${_identifierController.text.isEmpty ? "your mobile" : _identifierController.text}.'
+                            : 'Create a strong new password for your Sona Sutra account.',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Color(0xFFD6C8B9),
+                      fontSize: 13,
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 32),
+
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(horizontal: 18),
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF7F2EB),
+                            borderRadius: BorderRadius.circular(28),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.35),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                              ),
+                            ],
+                          ),
+                          padding: const EdgeInsets.all(24),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              if (_currentStep == 1) _buildStep1Form(),
+                              if (_currentStep == 2) _buildStep2Otp(),
+                              if (_currentStep == 3) _buildStep3NewPassword(),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -175,28 +240,29 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget _buildStep1Form() {
     return Column(
       children: [
-        CustomTextField(
+        CustomInputField(
           controller: _identifierController,
           hintText: 'Mobile Number or Email ID',
           prefixIcon: Icons.person_outline_rounded,
         ),
-        const SizedBox(height: 28),
-
-        SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFE5B864),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        const SizedBox(height: 32),
+        Container(
+          height: 56,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF3B1E0F), Color(0xFF220D04)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
-            onPressed: _sendOtp,
-            child: const Text(
-              'Send Verification Code',
-              style: TextStyle(
-                color: Color(0xFF1B0D05),
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
+            borderRadius: BorderRadius.circular(28),
+          ),
+          child: InkWell(
+            onTap: _sendOtp,
+            borderRadius: BorderRadius.circular(28),
+            child: const Center(
+              child: Text(
+                'Send Verification Code',
+                style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -213,8 +279,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           children: List.generate(
             6,
             (index) => SizedBox(
-              width: 44,
-              height: 52,
+              width: 42,
+              height: 56,
               child: TextField(
                 controller: _otpControllers[index],
                 focusNode: _focusNodes[index],
@@ -222,21 +288,21 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 textAlign: TextAlign.center,
                 maxLength: 1,
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
+                  color: Color(0xFF331D10),
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
                 decoration: InputDecoration(
                   counterText: '',
                   filled: true,
-                  fillColor: const Color(0xFF28150A),
+                  fillColor: const Color(0xFFFAF6F0),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Color(0xFF4A2B17)),
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Color(0xFFE4D8C9)),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Color(0xFFE5B864), width: 1.5),
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Color(0xFF3B1E0F), width: 1.5),
                   ),
                 ),
                 onChanged: (val) {
@@ -250,23 +316,24 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
           ),
         ),
-        const SizedBox(height: 28),
-
-        SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFE5B864),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        const SizedBox(height: 32),
+        Container(
+          height: 56,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF3B1E0F), Color(0xFF220D04)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
-            onPressed: _verifyOtp,
-            child: const Text(
-              'Verify & Continue',
-              style: TextStyle(
-                color: Color(0xFF1B0D05),
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
+            borderRadius: BorderRadius.circular(28),
+          ),
+          child: InkWell(
+            onTap: _verifyOtp,
+            borderRadius: BorderRadius.circular(28),
+            child: const Center(
+              child: Text(
+                'Verify & Continue',
+                style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -278,51 +345,53 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget _buildStep3NewPassword() {
     return Column(
       children: [
-        CustomTextField(
+        CustomInputField(
           controller: _newPasswordController,
           hintText: 'New Password',
           prefixIcon: Icons.lock_outline_rounded,
-          obscureText: _isObscureNew,
+          isPassword: _isObscureNew,
           suffixIcon: IconButton(
             icon: Icon(
-              _isObscureNew ? Icons.visibility_off_rounded : Icons.visibility_rounded,
-              color: const Color(0xFFE5B864),
+              _isObscureNew ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+              color: const Color(0xFF5A4030),
+              size: 20,
             ),
             onPressed: () => setState(() => _isObscureNew = !_isObscureNew),
           ),
         ),
         const SizedBox(height: 16),
-
-        CustomTextField(
+        CustomInputField(
           controller: _confirmPasswordController,
           hintText: 'Confirm New Password',
           prefixIcon: Icons.lock_clock_outlined,
-          obscureText: _isObscureConfirm,
+          isPassword: _isObscureConfirm,
           suffixIcon: IconButton(
             icon: Icon(
-              _isObscureConfirm ? Icons.visibility_off_rounded : Icons.visibility_rounded,
-              color: const Color(0xFFE5B864),
+              _isObscureConfirm ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+              color: const Color(0xFF5A4030),
+              size: 20,
             ),
             onPressed: () => setState(() => _isObscureConfirm = !_isObscureConfirm),
           ),
         ),
-        const SizedBox(height: 28),
-
-        SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFE5B864),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        const SizedBox(height: 32),
+        Container(
+          height: 56,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF3B1E0F), Color(0xFF220D04)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
-            onPressed: _resetPassword,
-            child: const Text(
-              'Update Password',
-              style: TextStyle(
-                color: Color(0xFF1B0D05),
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
+            borderRadius: BorderRadius.circular(28),
+          ),
+          child: InkWell(
+            onTap: _resetPassword,
+            borderRadius: BorderRadius.circular(28),
+            child: const Center(
+              child: Text(
+                'Update Password',
+                style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -330,4 +399,27 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       ],
     );
   }
+}
+
+class BokehBackgroundPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..style = PaintingStyle.fill;
+
+    void drawLight(double x, double y, double radius, Color color) {
+      paint.color = color;
+      canvas.drawCircle(Offset(x, y), radius, paint);
+    }
+
+    final w = size.width;
+    final h = size.height;
+
+    drawLight(w * 0.15, h * 0.1, 40, const Color(0xFFE5B864).withValues(alpha: 0.04));
+    drawLight(w * 0.85, h * 0.2, 50, const Color(0xFFFFF2BD).withValues(alpha: 0.05));
+    drawLight(w * 0.7, h * 0.08, 30, const Color(0xFFDCA148).withValues(alpha: 0.06));
+    drawLight(w * 0.2, h * 0.35, 60, const Color(0xFFE5B864).withValues(alpha: 0.03));
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
