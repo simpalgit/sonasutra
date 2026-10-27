@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/luxury_illustrations.dart';
 import '../../widgets/silver_bar_graphic.dart';
 import 'page_02_review_silver_screen.dart';
 import 'page_10_my_plans_screen.dart';
@@ -26,16 +27,6 @@ class _Page01ProgrammeOverviewScreenState
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Color(0xFFE5B864), size: 20),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
-        title: const Text(
-          'Silver Growth Programme',
-          style: TextStyle(
-            color: Color(0xFFFAF7F3),
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'serif',
-          ),
-        ),
-        centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.help_outline_rounded, color: Color(0xFFE5B864), size: 22),
@@ -46,7 +37,20 @@ class _Page01ProgrammeOverviewScreenState
       body: SafeArea(
         child: Column(
           children: [
-            _buildHeaderBanner(),
+            // Top Luxury Hero Banner Header
+            LuxuryHeroBannerHeader(
+              title: 'Silver Growth\nProgramme',
+              subtitle: 'Your silver. A choice of benefits.',
+              bottomContent: Row(
+                children: [
+                  _buildHeaderIconTile(Icons.grid_view_rounded, '999\nSilver'),
+                  const SizedBox(width: 12),
+                  _buildHeaderIconTile(Icons.calendar_today_rounded, '18 & 36\nmonths'),
+                  const SizedBox(width: 12),
+                  _buildHeaderIconTile(Icons.settings_suggest_rounded, 'Two benefit\noptions'),
+                ],
+              ),
+            ),
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
@@ -83,11 +87,11 @@ class _Page01ProgrammeOverviewScreenState
                       ),
                       const SizedBox(height: 14),
 
-                      // Monthly Payout Card
+                      // Monthly Payout Card with Calendar Illustration
                       _buildMonthlyPayoutCard(),
                       const SizedBox(height: 14),
 
-                      // Accumulate at Maturity Card
+                      // Accumulate at Maturity Card with Growth Illustration
                       _buildAccumulateMaturityCard(),
                       const SizedBox(height: 20),
 
@@ -111,9 +115,9 @@ class _Page01ProgrammeOverviewScreenState
                       // Options Row: Physical Silver & Bank Amount
                       Row(
                         children: [
-                          Expanded(child: _buildPayoutOptionTile('Physical Silver', Icons.workspace_premium_rounded)),
+                          Expanded(child: _buildPayoutOptionTile('Physical Silver', const SilverBarGraphic(width: 45, height: 45))),
                           const SizedBox(width: 12),
-                          Expanded(child: _buildPayoutOptionTile('Bank Amount', Icons.account_balance_rounded, subtitle: 'Bank payout uses an applicable settlement-rate quote.')),
+                          Expanded(child: _buildPayoutOptionTile('Bank Amount', const Icon(Icons.account_balance_rounded, color: Color(0xFFC8801C), size: 28), subtitle: 'Bank payout uses an applicable settlement-rate quote.')),
                         ],
                       ),
                       const SizedBox(height: 16),
@@ -201,53 +205,6 @@ class _Page01ProgrammeOverviewScreenState
     );
   }
 
-  Widget _buildHeaderBanner() {
-    return Container(
-      width: double.infinity,
-      color: const Color(0xFF1B0D05),
-      padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Silver Growth\nProgramme',
-                  style: TextStyle(
-                    color: Color(0xFFFAF7F3),
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'serif',
-                    height: 1.1,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Your silver. A choice of benefits.',
-                  style: TextStyle(color: Color(0xFFD4C2A8), fontSize: 12.5),
-                ),
-                const SizedBox(height: 14),
-                Row(
-                  children: [
-                    _buildHeaderIconTile(Icons.grid_view_rounded, '999\nSilver'),
-                    const SizedBox(width: 12),
-                    _buildHeaderIconTile(Icons.calendar_today_rounded, '18 & 36\nmonths'),
-                    const SizedBox(width: 12),
-                    _buildHeaderIconTile(Icons.settings_suggest_rounded, 'Two benefit\noptions'),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 10),
-          const SilverBarGraphic(width: 85, height: 85),
-        ],
-      ),
-    );
-  }
-
   Widget _buildHeaderIconTile(IconData icon, String text) {
     return Row(
       children: [
@@ -315,7 +272,7 @@ class _Page01ProgrammeOverviewScreenState
               children: const [
                 Icon(Icons.lock_rounded, size: 12, color: Color(0xFFC8801C)),
                 SizedBox(width: 4),
-                Text('Locked until\nmaturity', style: TextStyle(color: Color(0xFF786253), fontSize: 9.5, height: 1.1)),
+                Text('Principal stays\nlocked until\nmaturity.', style: TextStyle(color: Color(0xFF786253), fontSize: 9.5, height: 1.1)),
               ],
             ),
           ),
@@ -362,6 +319,7 @@ class _Page01ProgrammeOverviewScreenState
         border: Border.all(color: const Color(0xFFF3E4CD)),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             padding: const EdgeInsets.all(12),
@@ -371,32 +329,34 @@ class _Page01ProgrammeOverviewScreenState
             ),
             child: const Icon(Icons.calendar_today_rounded, color: Color(0xFFE5B864), size: 28),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('Monthly Payout', style: TextStyle(color: Color(0xFF1B0D05), fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'serif')),
                 const SizedBox(height: 2),
-                const Text('1 g per 100 eligible g for each completed month.', style: TextStyle(color: Color(0xFF786253), fontSize: 11.5)),
+                const Text('1 g per 100 eligible g for each completed month.', style: TextStyle(color: Color(0xFF786253), fontSize: 11)),
                 const SizedBox(height: 6),
                 Row(
                   children: const [
-                    Icon(Icons.check_circle_rounded, size: 14, color: Color(0xFFC8801C)),
+                    Icon(Icons.check_circle_rounded, size: 13, color: Color(0xFFC8801C)),
                     SizedBox(width: 4),
-                    Text('Collect due benefit monthly', style: TextStyle(color: Color(0xFF786253), fontSize: 11)),
+                    Text('Collect due benefit monthly', style: TextStyle(color: Color(0xFF786253), fontSize: 10.5)),
                   ],
                 ),
                 Row(
                   children: const [
-                    Icon(Icons.check_circle_rounded, size: 14, color: Color(0xFFC8801C)),
+                    Icon(Icons.check_circle_rounded, size: 13, color: Color(0xFFC8801C)),
                     SizedBox(width: 4),
-                    Text('Principal remains locked', style: TextStyle(color: Color(0xFF786253), fontSize: 11)),
+                    Text('Principal remains locked', style: TextStyle(color: Color(0xFF786253), fontSize: 10.5)),
                   ],
                 ),
               ],
             ),
           ),
+          const SizedBox(width: 8),
+          const CalendarSilverIllustration(),
           const Icon(Icons.chevron_right_rounded, color: Color(0xFFC8801C), size: 22),
         ],
       ),
@@ -412,6 +372,7 @@ class _Page01ProgrammeOverviewScreenState
         border: Border.all(color: const Color(0xFFF3E4CD)),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             padding: const EdgeInsets.all(12),
@@ -421,41 +382,43 @@ class _Page01ProgrammeOverviewScreenState
             ),
             child: const Icon(Icons.trending_up_rounded, color: Color(0xFFE5B864), size: 28),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('Accumulate at Maturity', style: TextStyle(color: Color(0xFF1B0D05), fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'serif')),
                 const SizedBox(height: 2),
-                const Text('Let your benefit build through the term.', style: TextStyle(color: Color(0xFF786253), fontSize: 11.5)),
+                const Text('Let your benefit build through the term.', style: TextStyle(color: Color(0xFF786253), fontSize: 11)),
                 const SizedBox(height: 6),
                 Row(
                   children: const [
-                    Icon(Icons.check_circle_rounded, size: 14, color: Color(0xFFC8801C)),
+                    Icon(Icons.check_circle_rounded, size: 13, color: Color(0xFFC8801C)),
                     SizedBox(width: 4),
-                    Text('Benefit compounds every 6 months', style: TextStyle(color: Color(0xFF786253), fontSize: 11)),
+                    Text('Benefit compounds every 6 months', style: TextStyle(color: Color(0xFF786253), fontSize: 10.5)),
                   ],
                 ),
                 Row(
                   children: const [
-                    Icon(Icons.check_circle_rounded, size: 14, color: Color(0xFFC8801C)),
+                    Icon(Icons.check_circle_rounded, size: 13, color: Color(0xFFC8801C)),
                     SizedBox(width: 4),
-                    Text('Principal + accumulated benefit at maturity', style: TextStyle(color: Color(0xFF786253), fontSize: 11)),
+                    Text('Principal + accumulated benefit at maturity', style: TextStyle(color: Color(0xFF786253), fontSize: 10.5)),
                   ],
                 ),
               ],
             ),
           ),
+          const SizedBox(width: 8),
+          const GrowthBarsIllustration(),
           const Icon(Icons.chevron_right_rounded, color: Color(0xFFC8801C), size: 22),
         ],
       ),
     );
   }
 
-  Widget _buildPayoutOptionTile(String title, IconData icon, {String? subtitle}) {
+  Widget _buildPayoutOptionTile(String title, Widget graphic, {String? subtitle}) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: const Color(0xFFFFFBF2),
         borderRadius: BorderRadius.circular(14),
@@ -466,7 +429,7 @@ class _Page01ProgrammeOverviewScreenState
         children: [
           Row(
             children: [
-              Icon(icon, color: const Color(0xFFC8801C), size: 20),
+              graphic,
               const SizedBox(width: 8),
               Expanded(child: Text(title, style: const TextStyle(color: Color(0xFF1B0D05), fontSize: 13, fontWeight: FontWeight.bold))),
               const Icon(Icons.chevron_right_rounded, color: Color(0xFFC8801C), size: 18),
@@ -474,7 +437,7 @@ class _Page01ProgrammeOverviewScreenState
           ),
           if (subtitle != null) ...[
             const SizedBox(height: 6),
-            Text(subtitle, style: const TextStyle(color: Color(0xFF786253), fontSize: 10, height: 1.2)),
+            Text(subtitle, style: const TextStyle(color: Color(0xFF786253), fontSize: 9.5, height: 1.2)),
           ],
         ],
       ),
