@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/logo_widget.dart';
 import '../widgets/custom_text_field.dart';
-import 'login_screen.dart';
 import 'gold_marketplace_screen.dart';
 
 class SignupScreen extends StatefulWidget {
